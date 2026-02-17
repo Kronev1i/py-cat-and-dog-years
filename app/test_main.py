@@ -28,7 +28,7 @@ import app.main as main
 def test_get_human_age(
         cat_age: int,
         dog_age: int,
-        expected: int
+        expected: list
 ) -> None:
     result = main.get_human_age(
         cat_age,
@@ -45,3 +45,43 @@ def test_get_human_age(
             f"expected {expected}, "
             f"got {result}"
         )
+
+
+@pytest.mark.parametrize(
+    "cat_age, dog_age",
+    [
+        (-1, 10),
+        (10, -1),
+        (-5, -5),
+    ],
+    ids=[
+        "negative cat age",
+        "negative dog age",
+        "both negative",
+    ]
+)
+def test_get_human_age_negative_values(cat_age: int, dog_age: int) -> None:
+    with pytest.raises(ValueError):
+        main.get_human_age(cat_age, dog_age)
+
+
+@pytest.mark.parametrize(
+    "cat_age, dog_age",
+    [
+        ("10", 10),
+        (10, "10"),
+        (1.5, 10),
+        (10, 1.5),
+        (None, 10),
+    ],
+    ids=[
+        "cat as string",
+        "dog as string",
+        "cat as float",
+        "dog as float",
+        "cat as None",
+    ]
+)
+def test_get_human_age_incorrect_types(cat_age: int, dog_age: int) -> None:
+    with pytest.raises(TypeError):
+        main.get_human_age(cat_age, dog_age)
